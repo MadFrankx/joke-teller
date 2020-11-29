@@ -105,13 +105,18 @@ const VoiceRSS = {
   },
 };
 
-// Pad=ssing Joke to VoiceRSS API
+// Disable / Enable button
+function toggleButton() {
+  button.disabled = !button.disabled;
+}
+
+// Passing Joke to VoiceRSS API
 function tellMe(joke) {
   VoiceRSS.speech({
     key: "83761aeedd8f4efab36ca800d9db08ae",
     src: joke,
     hl: "en-us",
-    v: "Linda",
+    v: "Mary",
     r: 0,
     c: "mp3",
     f: "44khz_16bit_stereo",
@@ -132,12 +137,14 @@ async function getJokes() {
     } else if (data.type == "twopart") {
       joke = `${data.setup} ... ${data.delivery}`;
     }
+    // Text-to-speech
     tellMe(joke);
+    // Disable button
+    toggleButton();
   } catch (error) {
     console.log("whoops", error);
   }
 }
 
-button.addEventListener("click", () => {
-  getJokes();
-});
+button.addEventListener("click", getJokes);
+audioElement.addEventListener("ended", toggleButton);
